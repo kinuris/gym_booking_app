@@ -33,7 +33,7 @@ class InstructorController extends Controller
             'middle_name' => 'nullable',
             'last_name' => 'required',
             'email' => 'required|email',
-            'profile_image' => 'nullable',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             'phone_number' => 'required',
             'bio' => 'nullable',
         ]);

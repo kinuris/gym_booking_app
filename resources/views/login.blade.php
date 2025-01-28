@@ -1,82 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     @vite('resources/css/app.css')
-    <style>
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .login-container {
-            background-color: #1e1e1e;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 300px;
-            text-align: center;
-        }
-
-        .login-container h1 {
-            margin-bottom: 20px;
-            color: #00bcd4;
-        }
-
-        .login-container input[type="email"],
-        .login-container input[type="password"] {
-            width: 90%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #333;
-            border-radius: 4px;
-            background-color: #2c2c2c;
-            color: #ffffff;
-        }
-
-        .login-container button {
-            margin-top: 1em;
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            background-color: #00bcd4;
-            color: #ffffff;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .login-container button:hover {
-            background-color: #0097a7;
-        }
-    </style>
 </head>
 
-<body>
-    <div class="login-container">
-        <h1 style="color: #ffffff;">Welcome to Gym Instructor</h1>
-        <h1>Login</h1>
-        <form action="/login" method="POST">
-            @csrf
-            <input type="email" name="email" placeholder="Email" required>
-            @if ($errors->has('email'))
-            <div style="color: red;">{{ $errors->first('email') }}</div>
-            @endif
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Login</button>
-            <button type="button" onclick="window.location.href='/register'">Register as Gym Instructor</button>
-            <button type="button" onclick="window.location.href='/register-client'">Register as Client</button>
-        </form>
+<body class="bg-gray-900 text-white">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <img src="{{ asset('assets/logo.jpg') }}" alt="TN Instructor Logo" class="h-12 rounded">
+                <h1 class="text-3xl font-bold">TN Instructor Booking</h1>
+            </div>
+            <nav>
+                <a href="/" class="px-4 hover:text-blue-400">Home</a>
+                <a href="/login" class="px-4 hover:text-blue-400">Login</a>
+                <a href="/register-client" class="px-4 hover:text-blue-400">Signup</a>
+                <a href="/register" class="px-4 hover:text-blue-400">Become an Instructor</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-96">
+            <h1 class="text-2xl font-bold text-white mb-2 text-center">Welcome to Gym Instructor</h1>
+            <h2 class="text-xl font-semibold text-cyan-500 mb-6 text-center">Login</h2>
+            
+            <form action="/login" method="POST" class="space-y-4">
+                @csrf
+                <div>
+                    <input type="email" 
+                           name="email" 
+                           placeholder="Email" 
+                           required 
+                           class="w-full p-3 bg-gray-700 rounded border border-gray-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 text-white">
+                    @if ($errors->has('email'))
+                        <div class="text-red-500 text-sm mt-1">{{ $errors->first('email') }}</div>
+                    @endif
+                </div>
+                
+                <div>
+                    <input type="password" 
+                           name="password" 
+                           placeholder="Password" 
+                           required 
+                           class="w-full p-3 bg-gray-700 rounded border border-gray-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 text-white">
+                </div>
+
+                <button type="submit" 
+                        class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+                    Login
+                </button>
+                
+                <button type="button" 
+                        onclick="window.location.href='/register'" 
+                        class="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition duration-300 mt-2">
+                    Register as Gym Instructor
+                </button>
+                
+                <button type="button" 
+                        onclick="window.location.href='/register-client'" 
+                        class="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+                    Register as Client
+                </button>
+            </form>
+        </div>
     </div>
 </body>
-
 </html>

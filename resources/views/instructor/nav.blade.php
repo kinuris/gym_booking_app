@@ -1,9 +1,18 @@
-<div>
-    <nav style="background-color: #444; padding: 10px;">
-        <ul style="list-style-type: none; margin: 0; padding: 0; display: flex; justify-content: space-around;">
-            <li><a href="/instructor" style="color: #fff; text-decoration: none; padding: 10px;">Profile</a></li>
-            <li><a href="/instructor/clients" style="color: #fff; text-decoration: none; padding: 10px;">Clients</a></li>
-            <li><a href="/logout" style="color: #fff; text-decoration: none; padding: 10px;">Logout</a></li>
-        </ul>
-    </nav>
-</div>
+<nav class="bg-gray-800 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between h-16">
+            <div class="flex space-x-8 items-center">
+                <img src="{{ asset('assets/logo.jpg') }}" alt="Logo" class="h-10 w-auto rounded">
+                <a href="/instructor" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition duration-150 ease-in-out">
+                    Profile
+                </a>
+                <a href="/instructor/clients" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition duration-150 ease-in-out">
+                    Clients
+                </a>
+                <a href="/logout" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition duration-150 ease-in-out">
+                    Logout
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>

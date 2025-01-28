@@ -47,4 +47,8 @@ class Instructor extends Authenticatable
     {
         return \Carbon\Carbon::parse($this->birthdate)->age;
     }
+
+    public static function getFeatured() {
+        return self::query()->inRandomOrder()->limit(3)->get();
+    }
 }

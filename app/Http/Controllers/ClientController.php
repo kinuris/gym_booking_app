@@ -140,7 +140,7 @@ class ClientController extends Controller
             'phone_number' => 'required',
             'birthdate' => 'required|date',
             'gender' => 'required',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
         ]);
 
         $client->first_name = $request->input('first_name');

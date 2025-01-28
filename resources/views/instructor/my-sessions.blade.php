@@ -8,82 +8,108 @@
     @vite('resources/css/app.css')
 </head>
 
-<body class="bg-gray-900 text-white">
+<body class="bg-gray-900 text-white min-h-screen">
     @include('instructor.nav')
-    <div class="container mx-auto p-6">
-        <h1 class="text-3xl font-bold mb-6">My Sessions</h1>
-        <div class="grid grid-cols-2 mt-4 gap-4 min-h-screen justify-center items-stretch">
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        <h1 class="text-4xl font-bold mb-8 text-center lg:text-left">My Sessions</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
             @foreach ($sessions as $session)
-            <div class="flex-1 p-4 min-h-screen bg-gray-800 rounded-lg flex flex-col">
-                <div class="flex items-center">
-                    <h2 class="text-2xl font-semibold mr-4">{{ $session->client->fullname }}</h2>
-                    <p class="{{ $session->status == 'Pending' ? 'text-yellow-500' : ($session->status == 'Canceled' ? 'text-red-500' : 'text-green-500') }}">
-                        ({{ $session->status }})
-                    </p>
+            <div class="bg-gray-800 rounded-xl shadow-xl p-6 hover:bg-gray-750 transition duration-300">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-2xl font-bold">{{ $session->client->fullname }}</h2>
+                    <span class="px-3 py-1 rounded-full text-sm font-medium {{ 
+                        $session->status == 'Pending' ? 'bg-yellow-500/20 text-yellow-400' : 
+                        ($session->status == 'Canceled' ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400') 
+                    }}">
+                        {{ $session->status }}
+                    </span>
+                </div>
 
-                    @if ($session->status == 'Pending')
-                    <div class="flex-1"></div>
-                    <form action="/session/start/{{ $session->id }}" method="POST">
+                @if ($session->status == 'Pending')
+                <div class="flex gap-2 mb-4">
+                    <form action="/session/start/{{ $session->id }}" method="POST" class="flex-1">
                         @csrf
-                        <button type="submit" class="bg-green-500 hover:bg-green-700 text-white text-xs py-1 px-2 rounded">
+                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
                             Start Session
                         </button>
                     </form>
-                    <form action="/session/cancel/{{ $session->id }}" method="POST" class="ml-2">
+                    <form action="/session/cancel/{{ $session->id }}" method="POST" class="flex-1">
                         @csrf
-                        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white text-xs py-1 px-2 rounded">
-                            Cancel
+                        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
+                            Cancel Session
                         </button>
                     </form>
-                    @endif
                 </div>
-                <img src="{{ asset('storage/' . $session->client->profile_image) }}" alt="{{ $session->client->fullname }}" class="w-48 h-48 mt-4 shadow-lg rounded-full object-cover mb-4">
+                @endif
 
-                <p class="text-gray-400">Phone Number: <a href="tel:{{ $session->instructor->phone_number }}" class="text-blue-400">{{ $session->client->phone_number }}</a></p>
-                <p class="text-gray-400">Meeting Place: <b>{{ $session->location }}</b> / {{ $session->duration }} {{ $session->type == 'hourly' ? 'hrs.' : 'mos.' }} </p>
+                <div class="flex flex-col md:flex-row items-center gap-6 mb-6">
+                    <img src="{{ asset('storage/' . $session->client->profile_image) }}"
+                        alt="{{ $session->client->fullname }}"
+                        class="w-32 h-32 rounded-full object-cover shadow-lg ring-2 ring-gray-700">
+                    <div class="space-y-2">
+                        <p class="text-gray-300">
+                            <span class="text-gray-400">Phone:</span>
+                            <a href="tel:{{ $session->instructor->phone_number }}" class="text-blue-400 hover:text-blue-300">
+                                {{ $session->client->phone_number }}
+                            </a>
+                        </p>
+                        <p class="text-gray-300">
+                            <span class="text-gray-400">Location:</span>
+                            <span class="font-semibold">{{ $session->location }}</span>
+                        </p>
+                        <p class="text-gray-300">
+                            <span class="text-gray-400">Duration:</span>
+                            <span class="font-semibold">{{ $session->duration }} {{ $session->type == 'hourly' ? 'hrs.' : 'mos.' }}</span>
+                        </p>
+                    </div>
+                </div>
 
-                <p class="text-xs mt-4 text-gray-400 mb-1">Shared Note:</p>
-                <textarea data-session-id="{{ $session->id }}" class="flex-1 bg-gray-700 text-white p-2 rounded-lg" name="session_notes" id="session_notes" rows="4" placeholder="Enter your notes here..." {{ $session->status == 'Canceled' ? 'readonly' : '' }}>{{ $session->notes }}</textarea>
+                <div class="space-y-2">
+                    <label for="session_notes" class="text-sm font-medium text-gray-400">Session Notes:</label>
+                    <textarea
+                        data-session-id="{{ $session->id }}"
+                        class="w-full bg-gray-700 text-white p-3 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:outline-none {{ $session->status == 'Canceled' ? 'opacity-75' : '' }}"
+                        name="session_notes"
+                        rows="15"
+                        placeholder="Enter your notes here..."
+                        {{ $session->status == 'Canceled' ? 'readonly' : '' }}>{{ $session->notes }}</textarea>
+                </div>
             </div>
             @endforeach
         </div>
     </div>
 
     <script>
-        document.querySelectorAll('textarea').forEach((e) => e.addEventListener('keydown', function(e) {
-            if (e.key === 'Tab') {
-                e.preventDefault();
-                const start = this.selectionStart;
-                const end = this.selectionEnd; // Set textarea value to: text before caret + tab + text after caret
-                this.value = this.value.substring(0, start) + "\t" + this.value.substring(end); // Put caret at right position again
-                this.selectionStart = this.selectionEnd = start + 1;
-            }
-        }));
-    </script>
+        const sessionNotes = document.querySelectorAll('textarea[name="session_notes"]');
+        let debounceTimeout;
+        sessionNotes.forEach(textarea => {
+            textarea.addEventListener('keydown', function(event) {
+                if (event.key === 'Tab') {
+                    event.preventDefault();
+                    const start = this.selectionStart;
+                    const end = this.selectionEnd;
+                    this.value = this.value.substring(0, start) + '\t' + this.value.substring(end);
+                    this.selectionStart = this.selectionEnd = start + 1;
+                }
+            });
 
-    <script>
-        document.querySelectorAll('textarea[name="session_notes"]').forEach(textarea => {
-            let debounceTimeout;
-            textarea.addEventListener('input', function() {
+            textarea.addEventListener('input', function(event) {
                 clearTimeout(debounceTimeout);
-                debounceTimeout = setTimeout(async () => {
-                    const sessionId = this.getAttribute('data-session-id');
-                    const notes = this.value;
 
-                    try {
-                        const response = await fetch(`/session/${sessionId}/notes`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({
-                                notes
-                            })
-                        });
-                    } catch (error) {
-                        console.error('Error saving notes:', error);
-                    }
+                const sessionId = this.getAttribute('data-session-id');
+                const notes = this.value;
+
+                debounceTimeout = setTimeout(() => {
+                    fetch(`/session/${sessionId}/notes`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            notes: notes
+                        })
+                    });
                 }, 500);
             });
         });

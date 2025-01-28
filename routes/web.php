@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\InstructorController;
+use App\Models\HomeClientStory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -16,13 +17,24 @@ Route::get('/', function () {
     } elseif (Auth::guard('web')->check()) {
         return redirect('/admin');
     } else {
-        return redirect('/login');
+        $stories = HomeClientStory::query()
+            ->where('status', '=', 'active')
+            ->get();
+
+        return view('homepage')->with('stories', $stories);
     }
 });
 
 Route::controller(AdminController::class)->group(function() {
     Route::get('/admin', 'manageAccountsView');
     Route::get('/admin/instructors', 'manageInstructorAccounsView');
+
+    Route::get('/admin/homepage-story', 'homepageStoryView');
+
+    Route::post('/admin/homepage-story/create', 'createHomepageStory');
+    Route::get('/admin/homepage-story/{story}/toggle-status', 'toggleHomepageStory');
+    Route::delete('/admin/homepage-story/{story}/delete', 'destroyHomepageStory');
+    Route::put('/admin/homepage-story/{story}/update', 'updateHomepageStory');
 
     Route::get('/client/disable/{client}', 'disableClient');
     Route::get('/client/enable/{client}', 'enableClient');
