@@ -16,7 +16,7 @@
             <div class="container mx-auto flex justify-between items-center">
                 <div class="flex items-center gap-4">
                     <img src="{{ asset('assets/logo.jpg') }}" alt="TN Instructor Logo" class="h-12 rounded">
-                    <h1 class="text-3xl font-bold">TN Instructor Booking</h1>
+                    <h1 class="text-3xl font-bold">TN Fitness Hub</h1>
                 </div>
                 <nav>
                     <a href="/" class="px-4 hover:text-blue-400">Home</a>
@@ -28,7 +28,7 @@
         </header>
         <main class="container mx-auto mt-10">
             <section class="text-center">
-                <h2 class="text-4xl font-bold mb-4">Welcome to the TN Instructor App</h2>
+                <h2 class="text-4xl font-bold mb-4">Welcome to the TN Fitness Hub</h2>
                 <p class="text-lg mb-8 text-gray-300">Book your gym sessions easily and stay fit!</p>
                 <a href="/login" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700">Get Started</a>
             </section>

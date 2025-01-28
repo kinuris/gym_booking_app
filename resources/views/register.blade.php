@@ -11,7 +11,7 @@
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center gap-4">
                 <img src="{{ asset('assets/logo.jpg') }}" alt="TN Instructor Logo" class="h-12 rounded">
-                <h1 class="text-3xl font-bold">TN Instructor Booking</h1>
+                <h1 class="text-3xl font-bold">TN Fitness Hub</h1>
             </div>
             <nav>
                 <a href="/" class="px-4 hover:text-blue-400">Home</a>
