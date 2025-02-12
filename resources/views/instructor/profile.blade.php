@@ -9,7 +9,7 @@
 
 <body class="bg-gray-800 text-gray-100 m-0 p-0 font-sans">
     @if($notifications->isNotEmpty())
-        <div class="fixed top-16 right-5 max-w-[270px] max-h-96 bg-gray-700 p-5 rounded-lg shadow-lg">
+        <div class="fixed top-16 right-5 max-w-[270px] max-h-96 bg-gray-700 p-5 rounded-lg shadow-lg overflow-auto">
             <button onclick="this.parentElement.style.display='none';" class="absolute top-2 right-2 text-gray-100 text-xl cursor-pointer hover:text-gray-300">&times;</button>
             <h2 class="text-blue-400 mb-3">Notifications</h2>
             <ul class="space-y-3">

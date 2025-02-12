@@ -20,6 +20,12 @@
                 </a>
             </li>
             <li>
+                <a href="/admin/featured-instructors" class="flex items-center text-gray-300 hover:text-white transition duration-150 ease-in-out">
+                    <i class="fas fa-star mr-2"></i>
+                    <span>Featured Instructors</span>
+                </a>
+            </li>
+            <li>
                 <a href="/logout" class="flex items-center text-gray-300 hover:text-white transition duration-150 ease-in-out">
                     <i class="fas fa-sign-out-alt mr-2"></i>
                     <span>Logout</span>

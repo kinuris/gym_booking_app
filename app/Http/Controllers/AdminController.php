@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\FeaturedInstructor;
 use App\Models\HomeClientStory;
 use App\Models\Instructor;
 use Illuminate\Http\Request;
@@ -156,5 +157,40 @@ class AdminController extends Controller
         $story->save();
 
         return redirect('/admin/homepage-story')->with('message', 'Story updated successfully.');
+    }
+
+    public function featuredInstructorsView()
+    {
+        $featuredInstructors = FeaturedInstructor::all()->map(fn($instructor) => $instructor->instructor); 
+
+        return view('admin.featured-instructors')
+            ->with('instructors', $featuredInstructors);
+    }
+
+    public function addFeaturedInstructor(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'instructor_id' => 'required|exists:instructors,id',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/admin/featured-instructors')->withErrors($validator);
+        }
+
+        $featuredInstructor = new FeaturedInstructor();
+        $featuredInstructor->instructor_id = $request->instructor_id;
+
+        $featuredInstructor->save();
+
+        return redirect('/admin/featured-instructors')->with('message', 'Instructor added to featured list.');
+    }
+
+    public function removeFeaturedInstructor(Instructor $instructor)
+    {
+        $featuredInstructor = FeaturedInstructor::where('instructor_id', $instructor->id)->first();
+
+        $featuredInstructor->delete();
+
+        return redirect('/admin/featured-instructors')->with('message', 'Instructor removed from featured list.');
     }
 }

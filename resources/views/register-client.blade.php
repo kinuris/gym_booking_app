@@ -20,6 +20,7 @@
                 <a href="/login" class="px-4 hover:text-blue-400">Login</a>
                 <a href="/register-client" class="px-4 hover:text-blue-400">Signup</a>
                 <a href="/register" class="px-4 hover:text-blue-400">Become an Instructor</a>
+                <a href="/about" class="px-4 hover:text-blue-400">About</a>
             </nav>
         </div>
     </header>

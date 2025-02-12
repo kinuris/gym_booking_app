@@ -6,6 +6,7 @@ use App\Models\Client;
 use App\Models\CoachingSession;
 use App\Models\Instructor;
 use App\Models\InstructorNotification;
+use App\Models\SessionEvent;
 use App\Models\SessionStar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +20,47 @@ class ClientController extends Controller
         $notifications = $client->notifications;
 
         return view('client.profile')->with('client', $client)->with('notifications', $notifications);
+    }
+
+    public function createEvent(Request $request, CoachingSession $session)
+    {
+        $request->validate([
+            'event_date' => 'required|date',
+            'event_type' => 'required',
+            'notes' => 'required',
+        ]);
+
+        $event = new SessionEvent();
+        $event->event_date = $request->input('event_date');
+        $event->event_type = $request->input('event_type');
+        $event->notes = $request->input('notes');
+        $event->coaching_session_id = $session->id;
+
+        $event->save();
+
+        return redirect('/instructor/clients')->with('message', 'Event created successfully.');
+    }
+
+    public function deleteEvent(SessionEvent $event)
+    {
+        $event->delete();
+
+        return redirect('/instructor/clients')->with('message', 'Event deleted successfully.');
+    }
+
+    public function updateEvent(Request $request, SessionEvent $event)
+    {
+        $request->validate([
+            'event_type' => 'required',
+            'notes' => 'required',
+        ]);
+
+        $event->event_type = $request->input('event_type');
+        $event->notes = $request->input('notes');
+
+        $event->save();
+
+        return redirect('/instructor/clients')->with('message', 'Event updated successfully.');
     }
 
     public function browseView()
@@ -38,8 +80,10 @@ class ClientController extends Controller
     public function scheduleMonthly(Request $request)
     {
         $request->validate([
-            'duration' => 'required',
-            'location' => 'required',
+            // 'duration' => 'required',
+            'start_date' => 'required|date_format:Y-m-d',
+            'end_date' => 'required|date_format:Y-m-d|after:start_date',
+            // 'location' => 'required',
             'instructor_id' => 'required',
         ]);
 
@@ -48,8 +92,10 @@ class ClientController extends Controller
         $coachingSession = new CoachingSession();
         $coachingSession->instructor_id = $request->input('instructor_id');
         $coachingSession->client_id = $client->id;
-        $coachingSession->duration = $request->input('duration');
-        $coachingSession->location = $request->input('location');
+        // $coachingSession->duration = $request->input('duration');
+        // $coachingSession->location = $request->input('location');
+        $coachingSession->start_date = $request->input('start_date');
+        $coachingSession->end_date = $request->input('end_date');
         $coachingSession->type = 'monthly';
         $coachingSession->save();
 
@@ -65,8 +111,10 @@ class ClientController extends Controller
     public function scheduleHourly(Request $request)
     {
         $request->validate([
-            'duration' => 'required',
-            'location' => 'required',
+            // 'duration' => 'required',
+            'start_date' => 'required|date_format:Y-m-d',
+            'end_date' => 'required|date_format:Y-m-d|after:start_date',
+            // 'location' => 'required',
             'instructor_id' => 'required',
         ]);
 
@@ -75,8 +123,10 @@ class ClientController extends Controller
         $coachingSession = new CoachingSession();
         $coachingSession->instructor_id = $request->input('instructor_id');
         $coachingSession->client_id = $client->id;
-        $coachingSession->duration = $request->input('duration');
-        $coachingSession->location = $request->input('location');
+        // $coachingSession->duration = $request->input('duration');
+        // $coachingSession->location = $request->input('location');
+        $coachingSession->start_date = $request->input('start_date');
+        $coachingSession->end_date = $request->input('end_date');
         $coachingSession->type = 'hourly';
         $coachingSession->save();
 

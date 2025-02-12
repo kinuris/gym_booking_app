@@ -23,6 +23,7 @@
                     <a href="/login" class="px-4 hover:text-blue-400">Login</a>
                     <a href="/register-client" class="px-4 hover:text-blue-400">Signup</a>
                     <a href="/register" class="px-4 hover:text-blue-400">Become an Instructor</a>
+                    <a href="/about" class="px-4 hover:text-blue-400">About</a>
                 </nav>
             </div>
         </header>
@@ -82,7 +83,7 @@
                 <h2 class="text-3xl font-bold mb-6 text-center">Featured Instructors</h2>
                 <div class="overflow-x-auto">
                     <div class="flex space-x-6 pb-4 min-w-max">
-                        @php($featured = App\Models\Instructor::inRandomOrder()->limit(10)->get())
+                        @php($featured = App\Models\FeaturedInstructor::all()->map(fn($instructor) => $instructor->instructor))
                         @foreach($featured as $instructor)
                         <div class="bg-gray-800 p-4 rounded-lg shadow-lg w-64">
                             <img src="{{ asset('storage/' . $instructor->profile_image) }}" alt="Instructor" class="w-full h-48 object-cover rounded-lg mb-4">

@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('coaching_sessions', function (Blueprint $table) {
             $table->id();
 
-            $table->integer('duration');
+            // $table->integer('duration');
             $table->enum('type', ['hourly', 'monthly']);
+
+            $table->timestamp('start_date');
+            $table->timestamp('end_date');
 
             $table->foreignId('instructor_id')
                 ->references('id')
@@ -25,7 +28,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('clients');
 
-            $table->string('location');
+            // $table->string('location');
 
             $table->string('notes')->default('');
             $table->boolean('disabled')->default(false);
