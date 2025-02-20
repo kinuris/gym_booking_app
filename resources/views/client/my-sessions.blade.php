@@ -79,6 +79,8 @@
                             {{ $session->status }}
                         </span>
                     </div>
+
+                    @if ($session->status !== 'Canceled')
                     <form action="/session/end/{{ $session->id }}" method="POST">
                         @csrf
                         <button type="submit" class="bg-red-600 hover:bg-red-700 text-sm text-white px-4 py-2 rounded-lg transition-colors duration-200"
@@ -86,6 +88,7 @@
                             End Session
                         </button>
                     </form>
+                    @endif
                 </div>
 
                 <!-- Profile Section -->

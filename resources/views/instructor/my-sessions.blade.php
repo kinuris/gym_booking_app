@@ -182,34 +182,50 @@
             @foreach ($sessions as $session)
             <div class="bg-gray-800 rounded-xl shadow-2xl p-6 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
                 <!-- Header Section -->
-                <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center mb-6">
                     <div class="flex items-center space-x-4">
-                        <h2 class="text-2xl font-bold text-white">{{ $session->instructor->fullname }}</h2>
+                        <h2 class="text-xl font-bold text-white">{{ $session->client->fullname }}</h2>
                         <span class="px-3 py-1 rounded-full text-sm font-medium 
                             {{ $session->status == 'Pending' ? 'bg-yellow-500/20 text-yellow-400' : 
                                ($session->status == 'Canceled' ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400') }}">
                             {{ $session->status }}
                         </span>
                     </div>
-                    <form action="/session/end/{{ $session->id }}" method="POST">
+
+                    <div class="flex-1"></div>
+
+                    @if ($session->status !== 'Canceled')
+                    <form action="/session/cancel/{{ $session->id }}" method="POST">
                         @csrf
-                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-sm text-white px-4 py-2 rounded-lg transition-colors duration-200"
+                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-sm text-white px-2 py-1 rounded transition-colors duration-200"
                             onclick="return confirm('Are you sure you want to end this session?')">
                             End Session
                         </button>
                     </form>
+
+                    @if ($session->status !== 'Accepted')
+                    <form action="/session/start/{{ $session->id }}" method="POST" class="ml-4">
+                        @csrf
+                        <button type="submit"
+                            class="bg-green-600 hover:bg-green-700 text-sm text-white px-2 py-1 rounded transition-colors duration-200"
+                            onclick="return confirm('Are you sure you want to start this session?')">
+                            Start Session
+                        </button>
+                    </form>
+                    @endif
+                    @endif
                 </div>
 
                 <!-- Profile Section -->
                 <div class="flex flex-col md:flex-row items-center gap-6 mb-6">
-                    <img src="{{ asset('storage/' . $session->instructor->profile_image) }}"
+                    <img src="{{ asset('storage/' . $session->client->profile_image) }}"
                         alt="{{ $session->instructor->fullname }}"
                         class="w-32 h-32 rounded-full object-cover border-4 border-gray-700 shadow-xl">
                     <div class="space-y-2">
                         <p class="text-gray-300">
                             <span class="text-gray-400">Phone:</span>
-                            <a href="tel:{{ $session->instructor->phone_number }}" class="text-blue-400 hover:text-blue-300">
-                                {{ $session->instructor->phone_number }}
+                            <a href="tel:{{ $session->client->phone_number }}" class="text-blue-400 hover:text-blue-300">
+                                {{ $session->client->phone_number }}
                             </a>
                         </p>
                         <p class="text-gray-300">
@@ -282,6 +298,16 @@
                                     @if($hasEvent)
                                     <span class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-red-600 text-xs font-semibold px-2 py-0.5 rounded-sm">
                                         Event
+                                    </span>
+                                    @endif
+                                    @if($currentDay->format('Y-m-d') === $today)
+                                    <span class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-600 text-xs font-semibold px-2 py-0.5 rounded-sm">
+                                        Today
+                                    </span>
+                                    @endif
+                                    @if($currentDay->format('d') == '01')
+                                    <span class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-orange-600 text-xs font-semibold px-2 py-0.5 rounded-sm">
+                                        {{ $currentDay->format('M') }}
                                     </span>
                                     @endif
                                     {{ $currentDay->format('d') }}

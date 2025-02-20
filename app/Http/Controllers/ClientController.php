@@ -141,7 +141,7 @@ class ClientController extends Controller
 
     public function clientSessions()
     {
-        $sessions = Client::query()->find(Auth::guard('client')->user()->id)->sessions->where('disabled', false);
+        $sessions = Client::query()->find(Auth::guard('client')->user()->id)->sessions;
 
         return view('client.my-sessions')->with('sessions', $sessions);
     }
