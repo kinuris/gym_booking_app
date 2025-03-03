@@ -176,69 +176,98 @@
     </script>
     @endif
 
-    <div class="container mx-auto px-4 py-8 max-w-7xl">
-        <h1 class="text-4xl font-bold mb-8 text-center lg:text-left">My Sessions</h1>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+    <div class="container mx-auto px-4 py-10 max-w-7xl">
+        <h1 class="text-4xl font-bold mb-10 text-center lg:text-left">Session Management</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
             @foreach ($sessions as $session)
-            <div class="bg-gray-800 rounded-xl shadow-2xl p-6 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
+            <div class="bg-gray-800/90 rounded-2xl shadow-2xl border border-gray-700/50 p-8 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
                 <!-- Header Section -->
-                <div class="flex items-center mb-6">
-                    <div class="flex items-center space-x-4">
-                        <h2 class="text-xl font-bold text-white">{{ $session->client->fullname }}</h2>
-                        <span class="px-3 py-1 rounded-full text-sm font-medium 
-                            {{ $session->status == 'Pending' ? 'bg-yellow-500/20 text-yellow-400' : 
-                               ($session->status == 'Canceled' ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400') }}">
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 pb-4 border-b border-gray-700/50">
+                    <div class="flex flex-col md:flex-row md:items-center md:space-x-4">
+                        <h2 class="text-2xl font-bold text-white mb-2 md:mb-0">{{ $session->client->fullname }}</h2>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium shadow-sm
+                            {{ $session->status == 'Pending' ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' : 
+                               ($session->status == 'Canceled' ? 'bg-red-500/20 text-red-300 border border-red-500/30' : 'bg-green-500/20 text-green-300 border border-green-500/30') }}">
+                            <span class="w-2 h-2 rounded-full mr-1.5
+                            {{ $session->status == 'Pending' ? 'bg-yellow-400' : 
+                               ($session->status == 'Canceled' ? 'bg-red-400' : 'bg-green-400') }}"></span>
                             {{ $session->status }}
                         </span>
                     </div>
 
-                    <div class="flex-1"></div>
+                    <div class="flex items-center gap-3 mt-4 md:mt-0 ml-3">
+                        @if ($session->status !== 'Canceled')
+                        <form action="/session/cancel/{{ $session->id }}" method="POST" class="inline-block">
+                            @csrf
+                            <button type="submit" class="bg-red-600/80 hover:bg-red-700 text-xs font-medium text-white px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1 shadow-sm hover:shadow-md"
+                                onclick="return confirm('Are you sure you want to end this session?')">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                                End Session
+                            </button>
+                        </form>
 
-                    @if ($session->status !== 'Canceled')
-                    <form action="/session/cancel/{{ $session->id }}" method="POST">
-                        @csrf
-                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-sm text-white px-2 py-1 rounded transition-colors duration-200"
-                            onclick="return confirm('Are you sure you want to end this session?')">
-                            End Session
-                        </button>
-                    </form>
-
-                    @if ($session->status !== 'Accepted')
-                    <form action="/session/start/{{ $session->id }}" method="POST" class="ml-4">
-                        @csrf
-                        <button type="submit"
-                            class="bg-green-600 hover:bg-green-700 text-sm text-white px-2 py-1 rounded transition-colors duration-200"
-                            onclick="return confirm('Are you sure you want to start this session?')">
-                            Start Session
-                        </button>
-                    </form>
-                    @endif
-                    @endif
+                        @if ($session->status !== 'Accepted')
+                        <form action="/session/start/{{ $session->id }}" method="POST" class="inline-block">
+                            @csrf
+                            <button type="submit"
+                                class="bg-emerald-600/90 hover:bg-emerald-700 text-xs font-medium text-white px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1 shadow-sm hover:shadow-md"
+                                onclick="return confirm('Are you sure you want to start this session?')">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                Start Session
+                            </button>
+                        </form>
+                        @endif
+                        @endif
+                    </div>
                 </div>
 
                 <!-- Profile Section -->
-                <div class="flex flex-col md:flex-row items-center gap-6 mb-6">
+                <div class="flex flex-col md:flex-row items-center gap-8 mb-8 pb-6 border-b border-gray-700/50">
                     <img src="{{ asset('storage/' . $session->client->profile_image) }}"
                         alt="{{ $session->instructor->fullname }}"
-                        class="w-32 h-32 rounded-full object-cover border-4 border-gray-700 shadow-xl">
-                    <div class="space-y-2">
-                        <p class="text-gray-300">
-                            <span class="text-gray-400">Phone:</span>
-                            <a href="tel:{{ $session->client->phone_number }}" class="text-blue-400 hover:text-blue-300">
-                                {{ $session->client->phone_number }}
-                            </a>
-                        </p>
-                        <p class="text-gray-300">
-                            <span class="text-gray-400">Duration:</span>
-                            {{ $session->duration }} {{ $session->duration == 1 ? 'day' : 'days' }}
-                        </p>
+                        class="w-36 h-36 rounded-2xl object-cover border-2 border-gray-600 shadow-xl">
+                    <div class="space-y-3 flex-1">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-gray-700/50 p-2 rounded-lg">
+                                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-gray-400 text-sm">Contact Number</p>
+                                <a href="tel:{{ $session->client->phone_number }}" class="text-white font-medium hover:text-blue-400 transition-colors">
+                                    {{ $session->client->phone_number }}
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-3">
+                            <div class="bg-gray-700/50 p-2 rounded-lg">
+                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-gray-400 text-sm">Session Duration</p>
+                                <p class="text-white font-medium">{{ $session->duration }} {{ $session->duration == 1 ? 'day' : 'days' }}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Calendar Section -->
-                <div class="mb-6">
-                    <label class="text-sm text-gray-400 mb-2 block">Session Calendar:</label>
-                    <div class="bg-gray-700/50 rounded-lg p-4">
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        Session Calendar
+                    </h3>
+                    <div class="bg-gray-700/30 rounded-xl p-5 border border-gray-700/50">
                         @php
                         $currentMonth = request('month-' . $session->id) ?
                         \Carbon\Carbon::parse(request('month-' . $session->id)) :
@@ -251,69 +280,75 @@
                         $nextMonth = $currentMonth->copy()->addMonth()->format('Y-m');
                         @endphp
 
-                        <div class="flex justify-between items-center mb-4">
-                            <a href="?{{ http_build_query(array_merge(request()->except(['month-' . $session->id, 'selected_date', 'selected_session']), ['month-' . $session->id => $prevMonth])) }}" class="text-gray-400 hover:text-white">
+                        <div class="flex justify-between items-center mb-5">
+                            <a href="?{{ http_build_query(array_merge(request()->except(['month-' . $session->id, 'selected_date', 'selected_session']), ['month-' . $session->id => $prevMonth])) }}" 
+                               class="text-gray-400 hover:text-white bg-gray-700/50 p-2 rounded-lg transition-colors">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                                 </svg>
                             </a>
-                            <div class="text-lg font-semibold">{{ $currentMonth->format('F Y') }}</div>
-                            <a href="?{{ http_build_query(array_merge(request()->except(['month-' . $session->id, 'selected_date', 'selected_session']), ['month-' . $session->id => $nextMonth])) }}" class="text-gray-400 hover:text-white">
+                            <div class="text-xl font-semibold text-white">{{ $currentMonth->format('F Y') }}</div>
+                            <a href="?{{ http_build_query(array_merge(request()->except(['month-' . $session->id, 'selected_date', 'selected_session']), ['month-' . $session->id => $nextMonth])) }}" 
+                               class="text-gray-400 hover:text-white bg-gray-700/50 p-2 rounded-lg transition-colors">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                                 </svg>
                             </a>
                         </div>
 
-                        <div class="grid grid-cols-7 gap-2 text-center text-sm">
-                            <div class="text-gray-400">Sun</div>
-                            <div class="text-gray-400">Mon</div>
-                            <div class="text-gray-400">Tue</div>
-                            <div class="text-gray-400">Wed</div>
-                            <div class="text-gray-400">Thu</div>
-                            <div class="text-gray-400">Fri</div>
-                            <div class="text-gray-400">Sat</div>
+                        <div class="grid grid-cols-7 gap-2 text-center">
+                            <div class="text-gray-400 font-medium pb-2">S</div>
+                            <div class="text-gray-400 font-medium pb-2">M</div>
+                            <div class="text-gray-400 font-medium pb-2">T</div>
+                            <div class="text-gray-400 font-medium pb-2">W</div>
+                            <div class="text-gray-400 font-medium pb-2">T</div>
+                            <div class="text-gray-400 font-medium pb-2">F</div>
+                            <div class="text-gray-400 font-medium pb-2">S</div>
                             @while($currentDay <= $endDate)
                                 @php
                                 $hasEvent=$session->events()->where('event_date', $currentDay->format('Y-m-d'))->exists();
+                                $isStartDate = $currentDay->format('Y-m-d') === date('Y-m-d', strtotime($session->start_date));
+                                $isEndDate = $currentDay->format('Y-m-d') === date('Y-m-d', strtotime($session->end_date));
+                                $isSessionDay = $currentDay->between(\Carbon\Carbon::parse($session->start_date), \Carbon\Carbon::parse($session->end_date));
+                                $isToday = $currentDay->format('Y-m-d') === $today;
+                                $isDifferentMonth = $currentDay->month !== $currentMonth->month;
                                 @endphp
-                                <a href="?{{ http_build_query(array_merge(request()->all(), ['selected_date' => $currentDay->format('Y-m-d'), 'selected_session' => $session->id])) }}" class="relative p-2 rounded block text-center 
-                                    {{ $hasEvent ? 'bg-red-500/50 hover:bg-red-500/60' : 
-                                       ($currentDay->format('Y-m-d') === $today ? 'bg-blue-500 hover:bg-blue-600' : 
-                                       ($currentDay->format('Y-m-d') === date('Y-m-d', strtotime($session->start_date)) ? 'bg-green-500 hover:bg-green-600' : 
-                                       ($currentDay->format('Y-m-d') === date('Y-m-d', strtotime($session->end_date)) ? 'bg-green-500 hover:bg-green-600' :
-                                       ($currentDay->between(\Carbon\Carbon::parse($session->start_date), \Carbon\Carbon::parse($session->end_date)) ? 'bg-green-500/20 hover:bg-green-500/30' :
-                                       ($currentDay->month !== $currentMonth->month ? 'bg-gray-800/50 hover:bg-gray-800/60' : 'bg-gray-600 hover:bg-gray-700'))))) }}"
-                                    {{ !$currentDay->between(\Carbon\Carbon::parse($session->start_date), \Carbon\Carbon::parse($session->end_date)) ? 'onclick="e.preventDefault()"' : '' }}>
-                                    @if($currentDay->format('Y-m-d') === date('Y-m-d', strtotime($session->start_date)))
-                                    <span class="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-green-600 text-xs font-semibold px-2 py-0.5 rounded-sm">
+                                <a href="?{{ http_build_query(array_merge(request()->all(), ['selected_date' => $currentDay->format('Y-m-d'), 'selected_session' => $session->id])) }}" 
+                                   class="relative p-2.5 rounded-lg font-medium text-center transition-all
+                                {{ !$isSessionDay ? 'pointer-events-none cursor-default' : 'cursor-pointer' }}
+                                    {{ $hasEvent ? 'bg-red-500/30 hover:bg-red-500/40 text-white' : 
+                                       ($isStartDate || $isEndDate ? 'bg-green-500/80 hover:bg-green-600 text-white' : 
+                                       ($isToday ? 'bg-blue-500/80 hover:bg-blue-600 text-white' : 
+                                       ($isSessionDay ? 'bg-green-500/20 hover:bg-green-500/30 text-green-300' :
+                                       ($isDifferentMonth ? 'bg-gray-800/50 text-gray-500' : 'bg-gray-700/50 hover:bg-gray-700 text-gray-300')))) }}">
+                                    {{ $currentDay->format('d') }}
+                                    
+                                    @if($isStartDate)
+                                    <span class="absolute -top-1 left-1/2 transform -translate-x-1/2 bg-green-600 text-xs font-medium px-1.5 py-0.5 rounded text-white">
                                         Start
                                     </span>
                                     @endif
-                                    @if($currentDay->format('Y-m-d') === date('Y-m-d', strtotime($session->end_date)))
-                                    <span class="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-green-600 text-xs font-semibold px-2 py-0.5 rounded-sm">
+                                    
+                                    @if($isEndDate)
+                                    <span class="absolute -top-1 left-1/2 transform -translate-x-1/2 bg-green-600 text-xs font-medium px-1.5 py-0.5 rounded text-white">
                                         End
                                     </span>
                                     @endif
+                                    
                                     @if($hasEvent)
-                                    <span class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-red-600 text-xs font-semibold px-2 py-0.5 rounded-sm">
+                                    <span class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 bg-red-600 text-xs font-medium px-1.5 py-0.5 rounded text-white">
                                         Event
                                     </span>
                                     @endif
-                                    @if($currentDay->format('Y-m-d') === $today)
-                                    <span class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-600 text-xs font-semibold px-2 py-0.5 rounded-sm">
+                                    
+                                    @if($isToday && !$isStartDate && !$isEndDate)
+                                    <span class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 bg-blue-600 text-xs font-medium px-1.5 py-0.5 rounded text-white">
                                         Today
                                     </span>
                                     @endif
-                                    @if($currentDay->format('d') == '01')
-                                    <span class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-orange-600 text-xs font-semibold px-2 py-0.5 rounded-sm">
-                                        {{ $currentDay->format('M') }}
-                                    </span>
-                                    @endif
-                                    {{ $currentDay->format('d') }}
                                 </a>
                                 @php $currentDay->addDay(); @endphp
-                                @endwhile
+                            @endwhile
                         </div>
                     </div>
                 </div>

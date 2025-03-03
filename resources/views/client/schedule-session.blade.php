@@ -42,28 +42,49 @@
 
 <body class="bg-gradient-to-b from-gray-900 to-gray-800 text-white min-h-screen">
     @include('client.nav')
-    <div class="max-w-xl mx-auto my-12 bg-gray-800/50 backdrop-blur-sm shadow-2xl rounded-xl overflow-hidden border border-gray-700">
-        <div class="flex justify-center mt-8">
-            <div class="relative">
-                <img class="object-cover w-48 h-48 rounded-full shadow-xl border-4 border-gray-700"
-                    src="{{ asset('storage/' . $instructor->profile_image) }}"
-                    alt="Instructor Profile Image">
-                <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-600 px-4 py-1 rounded-full text-sm font-semibold">
-                    Instructor
+    <div class="max-w-3xl mx-auto my-12 bg-gray-800/50 backdrop-blur-sm shadow-2xl rounded-xl overflow-hidden border border-gray-700">
+        <div class="flex md:flex-row flex-col p-8">
+            <div class="md:w-1/3 w-full flex justify-center">
+                <div class="relative">
+                    <img class="object-cover w-48 h-48 rounded-full shadow-xl border-4 border-blue-700/50"
+                        src="{{ asset('storage/' . $instructor->profile_image) }}"
+                        alt="{{ $instructor->fullname }}">
+                    <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-700 to-blue-500 px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
+                        Instructor
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="p-8">
-            <h2 class="text-center text-2xl font-bold text-blue-400">{{ $instructor->fullname }}</h2>
-            <p class="text-center text-gray-400 mt-2 italic">{{ $instructor->bio }}</p>
+            <div class="md:w-2/3 w-full md:pl-6 md:mt-0 mt-8">
+                <h2 class="text-2xl font-bold text-blue-400 flex items-center">
+                    {{ $instructor->fullname }}
+                    <span class="ml-2 bg-blue-600/20 text-blue-300 text-xs px-2 py-1 rounded">Professional Trainer</span>
+                </h2>
+                <p class="text-gray-300 mt-2 leading-relaxed">{{ $instructor->bio }}</p>
+                <div class="mt-4 flex items-center">
+                    <div class="flex">
+                        @for ($i = 0; $i < 5; $i++)
+                            <svg class="w-5 h-5 {{ $i < 4 ? 'text-yellow-400' : 'text-gray-500' }}" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                        @endfor
+                    </div>
+                    <span class="ml-2 text-gray-400 text-sm">4.0 (24 reviews)</span>
+                </div>
+            </div>
         </div>
 
         <div class="px-8 pb-8">
             <div class="flex justify-center mb-6 gap-4">
-                <button id="monthlyButton" class="bg-gray-700 hover:bg-blue-600 transition-colors duration-300 flex-1 text-white font-bold py-3 px-6 rounded-lg shadow-lg">
+                <button id="monthlyButton" class="bg-blue-600 hover:bg-blue-700 transition-colors duration-300 flex-1 text-white font-bold py-3 px-6 rounded-lg shadow-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
                     Monthly Plan
                 </button>
-                <button id="hourlyButton" class="bg-gray-700 hover:bg-blue-600 transition-colors duration-300 flex-1 text-white font-bold py-3 px-6 rounded-lg shadow-lg">
+                <button id="hourlyButton" class="bg-gray-700 hover:bg-blue-600 transition-colors duration-300 flex-1 text-white font-bold py-3 px-6 rounded-lg shadow-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
                     Hourly Plan
                 </button>
             </div>
@@ -89,71 +110,84 @@
                 </div>
             @endif
 
-            <div id="calendar" class="mt-6 p-4 bg-gray-700/50 rounded-lg">
-                <div class="flex justify-between items-center mb-4">
-                    <button id="prevMonth" class="text-gray-400 hover:text-white">&lt; Prev</button>
-                    <h3 id="monthYear" class="text-lg font-bold"></h3>
-                    <button id="nextMonth" class="text-gray-400 hover:text-white">Next &gt;</button>
+            <div class="mt-6 bg-gray-700/30 rounded-lg border border-gray-600/50 overflow-hidden">
+                <div class="bg-gray-800/70 py-3 px-4">
+                    <div class="flex justify-between items-center">
+                        <button id="prevMonth" class="text-gray-400 hover:text-white transition-colors flex items-center">
+                            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                            Prev
+                        </button>
+                        <h3 id="monthYear" class="text-lg font-bold text-blue-300"></h3>
+                        <button id="nextMonth" class="text-gray-400 hover:text-white transition-colors flex items-center">
+                            Next
+                            <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-                <div class="calendar" id="calendarGrid"></div>
+                <div class="p-4">
+                    <div class="calendar" id="calendarGrid"></div>
+                    <div class="mt-4 flex gap-4 text-xs text-gray-400">
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 bg-blue-600 rounded-sm mr-1"></div>
+                            <span>Start Date</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 bg-green-600 rounded-sm mr-1"></div>
+                            <span>End Date</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div id="monthlyRateForm" class="rate-form hidden space-y-6 mt-4">
-                <h3 class="text-center text-xl font-bold text-blue-400">Monthly Rate
-                    <span class="text-green-400">({{ number_format($instructor->monthly_rate, 2) }} PHP)</span>
-                </h3>
+            <div id="monthlyRateForm" class="rate-form space-y-6 mt-6 bg-gray-700/30 rounded-lg border border-gray-600/50 p-6">
+                <div class="flex justify-between items-center border-b border-gray-600/50 pb-4">
+                    <h3 class="text-xl font-bold text-blue-400">Monthly Training Plan</h3>
+                    <div class="text-green-400 font-bold text-lg">{{ number_format($instructor->monthly_rate, 2) }} PHP</div>
+                </div>
                 <form action="/session/schedule/monthly" method="POST" class="space-y-4">
                     @csrf
                     <input type="hidden" name="instructor_id" value="{{ $instructor->id }}">
-                    <input type="hidden" name="start_date" class="bg-blue-600">
+                    <input type="hidden" name="start_date">
                     <input type="hidden" name="end_date">
-                    <!-- <div class="space-y-2">
-                        <label for="monthly_rate" class="block text-gray-300 font-medium">Duration (In Months)</label>
-                        <input type="text" id="monthly_rate" name="duration"
-                            class="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300">
-                    </div> -->
                     <input type="hidden" name="location" value="N/A">
-                    <!-- <div class="space-y-2">
-                        <label for="meeting_place" class="block text-gray-300 font-medium">Meeting Place</label>
-                        <input type="text" id="meeting_place" name="location" 
-                               class="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300">
-                    </div> -->
+                    
                     <div class="flex justify-center">
-                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-colors duration-300">
-                            Schedule Session
+                        <button type="submit" class="bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-colors duration-300 flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            Schedule Monthly Session
                         </button>
                     </div>
                 </form>
             </div>
 
-            <div id="hourlyRateForm" class="rate-form hidden space-y-6 mt-4">
-                <h3 class="text-center text-xl font-bold text-blue-400">Hourly Rate
-                    <span class="text-green-400">({{ number_format($instructor->hourly_rate, 2) }} PHP)</span>
-                </h3>
+            <div id="hourlyRateForm" class="rate-form hidden space-y-6 mt-6 bg-gray-700/30 rounded-lg border border-gray-600/50 p-6">
+                <div class="flex justify-between items-center border-b border-gray-600/50 pb-4">
+                    <h3 class="text-xl font-bold text-blue-400">Hourly Training Plan</h3>
+                    <div class="text-green-400 font-bold text-lg">{{ number_format($instructor->hourly_rate, 2) }} PHP</div>
+                </div>
                 <form action="/session/schedule/hourly" method="POST" class="space-y-4">
                     @csrf
                     <input type="hidden" name="instructor_id" value="{{ $instructor->id }}">
                     <input type="hidden" name="start_date">
                     <input type="hidden" name="end_date">
-                    <!-- <div class="space-y-2">
-                        <label for="hourly_rate" class="block text-gray-300 font-medium">Duration (In Hours)</label>
-                        <input type="text" id="hourly_rate" name="duration"
-                            class="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300">
-                    </div> -->
                     <input type="hidden" name="location" value="N/A">
-                    <!-- <div class="space-y-2">
-                        <label for="meeting_place" class="block text-gray-300 font-medium">Meeting Place</label>
-                        <input type="text" id="meeting_place" name="location" 
-                               class="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300">
-                    </div> -->
+                    
                     <div class="flex justify-center">
-                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-colors duration-300">
-                            Schedule Session
+                        <button type="submit" class="bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-colors duration-300 flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Schedule Hourly Session
                         </button>
                     </div>
                 </form>
             </div>
-
         </div>
     </div>
 

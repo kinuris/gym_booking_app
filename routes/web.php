@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\InstructorController;
+use App\Http\Controllers\ProgressRecordController;
 use App\Models\HomeClientStory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -48,6 +49,10 @@ Route::controller(AdminController::class)->group(function() {
 
     Route::get('/instructor/disable/{instructor}', 'disableInstructor');
     Route::get('/instructor/enable/{instructor}', 'enableInstructor');
+});
+
+Route::controller(ProgressRecordController::class)->group(function() {
+    Route::post('/session/store', 'store')->name('progress.store');
 });
 
 Route::controller(ClientController::class)->group(function() {

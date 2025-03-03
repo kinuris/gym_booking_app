@@ -16,19 +16,27 @@ class CoachingSession extends Model
         return $this->belongsTo(Client::class);
     }
 
-    public function rating() {
+    public function rating()
+    {
         return $this->hasOne(SessionStar::class);
     }
 
-    public function events() {
+    public function events()
+    {
         return $this->hasMany(SessionEvent::class);
     }
 
-    public function getDurationAttribute() {
+    public function progressRecords()
+    {
+        return $this->hasMany(ProgressRecord::class);
+    }
+
+    public function getDurationAttribute()
+    {
         $start = new \DateTime($this->start_date);
         $end = new \DateTime($this->end_date);
         $interval = $start->diff($end);
-        
+
         return $interval->days;
     }
 }
